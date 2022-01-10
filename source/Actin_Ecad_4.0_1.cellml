@@ -1,0 +1,726 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model name="Actin_Ecad" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
+    <!--um-->
+    <units name="um">
+        <unit multiplier="0.000001" units="metre"/>
+    </units>
+    <!-- um^-2, the concentration unit of all chemical species -->
+    <units name="um_2">
+        <unit exponent="-2" units="um"/>
+    </units>
+    <!--s^-1, unit of kinetic constants-->
+    <units name="s_1">
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- s^-1*um^2, unit of kinetic constants-->
+    <units name="um2s_1">
+        <unit exponent="2" units="um"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- s^-1*um^-2, unit of rate-->
+    <units name="um_2s_1">
+        <unit exponent="-2" units="um"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <component name="environment">
+        <variable name="t" public_interface="out" units="second"/>
+    </component>
+    <component name="membrane">
+        <variable name="t" public_interface="in" units="second"/>
+        <variable initial_value="5000" name="E_trans" units="um_2"/>
+        <variable initial_value="5119" name="actin_1" units="um_2"/>
+        <variable initial_value="2408" name="actin_a_1" units="um_2"/>
+        <variable initial_value="202.5" name="Rac_1" units="um_2"/>
+        <variable initial_value="22.5" name="Rac_a_1" units="um_2"/>
+        <variable initial_value="83.7" name="RhoA_1" units="um_2"/>
+        <variable initial_value="9.3" name="RhoA_a_1" units="um_2"/>
+        <variable initial_value="103" name="myo_1" units="um_2"/>
+        <variable initial_value="2.6" name="myo_a_1" units="um_2"/>
+        <variable initial_value="11.8" name="myo_actin_1" units="um_2"/>
+        <variable initial_value="0" name="E_trans_actin_1" units="um_2"/>
+        <variable name="E_trans_all_1" units="um_2"/>
+        <variable initial_value="5119" name="actin_2" units="um_2"/>
+        <variable initial_value="2408" name="actin_a_2" units="um_2"/>
+        <variable initial_value="202.5" name="Rac_2" units="um_2"/>
+        <variable initial_value="22.5" name="Rac_a_2" units="um_2"/>
+        <variable initial_value="83.7" name="RhoA_2" units="um_2"/>
+        <variable initial_value="9.3" name="RhoA_a_2" units="um_2"/>
+        <variable initial_value="103" name="myo_2" units="um_2"/>
+        <variable initial_value="2.6" name="myo_a_2" units="um_2"/>
+        <variable initial_value="11.8" name="myo_actin_2" units="um_2"/>
+        <variable initial_value="0" name="E_trans_actin_2" units="um_2"/>
+        <variable name="E_trans_all_2" units="um_2"/>
+        <!-- Actin polymerization        // -->
+        <variable initial_value="0" name="k0_1" units="um2s_1"/>
+        <variable initial_value="0" name="k0_2" units="um2s_1"/>
+        <!-- E-trans activates Rac        // should be comparable to formin-->
+        <variable initial_value="0.000005" name="k1_1" units="um2s_1"/>
+        <variable initial_value="0.000005" name="k1_2" units="um2s_1"/>
+        <!-- Rac_a activates actin          // indirect reaction unknown-->
+        <variable initial_value="0.0006272" name="k2_1" units="um2s_1"/>
+        <variable initial_value="0.0006272" name="k2_2" units="um2s_1"/>
+        <!-- Rac autoactivation             // Confirmed !!!-->
+        <variable initial_value="0.01" name="k3_1" units="s_1"/>
+        <variable initial_value="0.01" name="k3_2" units="s_1"/>
+        <!-- Rac deactivation             // Confirmed !!!-->
+        <variable initial_value="0.09" name="k3r_1" units="s_1"/>
+        <variable initial_value="0.09" name="k3r_2" units="s_1"/>
+        <!-- Branched actin deploymerization                     -->
+        <variable initial_value="0.03" name="k4_1" units="s_1"/>
+        <variable initial_value="0.03" name="k4_2" units="s_1"/>
+        <!-- E-trans actin_a binding      -->
+        <variable initial_value="0.001" name="k5_1" units="um2s_1"/>
+        <variable initial_value="0.001" name="k5_2" units="um2s_1"/>
+        <!-- E-trans actin_a unbinding    // This should also be a force dependent reaction-->
+        <variable initial_value="10" name="k5r_1" units="s_1"/>
+        <variable initial_value="10" name="k5r_2" units="s_1"/>
+        <!-- Rac inhibit RhoA             // unknown, negatively related to myosin concentration-->
+        <variable initial_value="0.05" name="k6_1" units="um2s_1"/>
+        <variable initial_value="0.05" name="k6_2" units="um2s_1"/>
+        <!-- RhoA autoactivation                        // unknown-->
+        <variable initial_value="0.136" name="k7_1" units="s_1"/>
+        <variable initial_value="0.136" name="k7_2" units="s_1"/>
+        <!-- RhoA deactivation                        // unknown-->
+        <variable initial_value="0.1" name="k7r_1" units="s_1"/>
+        <variable initial_value="0.1" name="k7r_2" units="s_1"/>
+        <!-- RhoA_a activates myosin                    // indirect reaction-->
+        <variable initial_value="1.0" name="k8_1" units="um2s_1"/>
+        <variable initial_value="1.0" name="k8_2" units="um2s_1"/>
+        <!-- Myosin binding to actin_a                // Confirmed !!!-->
+        <variable initial_value="0.15" name="k9_1" units="um2s_1"/>
+        <variable initial_value="0.15" name="k9_2" units="um2s_1"/>
+        <!-- Myosin unbinding from actin_a            // Confirmed !!!                                                                                                                                   -->
+        <variable initial_value="81.3" name="k9r_1" units="s_1"/>
+        <variable initial_value="81.3" name="k9r_2" units="s_1"/>
+        <!-- Don't forget to update this manually in the continuum model-->
+        <!--ode(E_trans, t) = -k6*E_trans*actin_a+k6r*E_trans_actin;-->
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>E_trans</ci>
+                </apply>
+                <cn cellml:units="dimensionless">0</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>actin_1</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <ci>k2_1</ci>
+                            </apply>
+                            <ci>Rac_a_1</ci>
+                            <ci>actin_1</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k4_1</ci>
+                            <ci>actin_a_1</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k0_1</ci>
+                        <ci>actin_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>actin_a_1</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <ci>k2_1</ci>
+                            <ci>Rac_a_1</ci>
+                            <ci>actin_1</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k4_1</ci>
+                            <ci>actin_a_1</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k0_1</ci>
+                        <ci>actin_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>Rac_1</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <ci>k1_1</ci>
+                            </apply>
+                            <apply>
+                                <plus/>
+                                <ci>E_trans</ci>
+                                <ci>E_trans_actin_1</ci>
+                            </apply>
+                            <ci>Rac_1</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k3r_1</ci>
+                            <ci>Rac_a_1</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k3_1</ci>
+                        <ci>Rac_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>Rac_a_1</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <ci>k1_1</ci>
+                            <apply>
+                                <plus/>
+                                <ci>E_trans</ci>
+                                <ci>E_trans_actin_1</ci>
+                            </apply>
+                            <ci>Rac_1</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k3r_1</ci>
+                            <ci>Rac_a_1</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k3_1</ci>
+                        <ci>Rac_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>RhoA_1</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>k6_1</ci>
+                            <ci>Rac_a_1</ci>
+                            <ci>RhoA_a_1</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k7r_1</ci>
+                            <ci>RhoA_a_1</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k7_1</ci>
+                        <ci>RhoA_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>RhoA_a_1</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <ci>k6_1</ci>
+                            </apply>
+                            <ci>Rac_a_1</ci>
+                            <ci>RhoA_a_1</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k7r_1</ci>
+                            <ci>RhoA_a_1</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k7_1</ci>
+                        <ci>RhoA_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>myo_1</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <minus/>
+                            <ci>k8_1</ci>
+                        </apply>
+                        <ci>myo_1</ci>
+                        <ci>RhoA_a_1</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k9r_1</ci>
+                        <ci>myo_actin_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>myo_a_1</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>k8_1</ci>
+                        <ci>myo_1</ci>
+                        <ci>RhoA_a_1</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k9_1</ci>
+                        <ci>myo_a_1</ci>
+                        <ci>actin_a_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>myo_actin_1</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>k9_1</ci>
+                        <ci>myo_a_1</ci>
+                        <ci>actin_a_1</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k9r_1</ci>
+                        <ci>myo_actin_1</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>actin_2</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <ci>k2_2</ci>
+                            </apply>
+                            <ci>Rac_a_2</ci>
+                            <ci>actin_2</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k4_2</ci>
+                            <ci>actin_a_2</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k0_2</ci>
+                        <ci>actin_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>actin_a_2</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <ci>k2_2</ci>
+                            <ci>Rac_a_2</ci>
+                            <ci>actin_2</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k4_2</ci>
+                            <ci>actin_a_2</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k0_2</ci>
+                        <ci>actin_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>Rac_2</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <ci>k1_2</ci>
+                            </apply>
+                            <apply>
+                                <plus/>
+                                <ci>E_trans</ci>
+                                <ci>E_trans_actin_2</ci>
+                            </apply>
+                            <ci>Rac_2</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k3r_2</ci>
+                            <ci>Rac_a_2</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k3_2</ci>
+                        <ci>Rac_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>Rac_a_2</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <ci>k1_2</ci>
+                            <apply>
+                                <plus/>
+                                <ci>E_trans</ci>
+                                <ci>E_trans_actin_2</ci>
+                            </apply>
+                            <ci>Rac_2</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k3r_2</ci>
+                            <ci>Rac_a_2</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k3_2</ci>
+                        <ci>Rac_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>RhoA_2</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>k6_2</ci>
+                            <ci>Rac_a_2</ci>
+                            <ci>RhoA_a_2</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k7r_2</ci>
+                            <ci>RhoA_a_2</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k7_2</ci>
+                        <ci>RhoA_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>RhoA_a_2</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <ci>k6_2</ci>
+                            </apply>
+                            <ci>Rac_a_2</ci>
+                            <ci>RhoA_a_2</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>k7r_2</ci>
+                            <ci>RhoA_a_2</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k7_2</ci>
+                        <ci>RhoA_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>myo_2</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <minus/>
+                            <ci>k8_2</ci>
+                        </apply>
+                        <ci>myo_2</ci>
+                        <ci>RhoA_a_2</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k9r_2</ci>
+                        <ci>myo_actin_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>myo_a_2</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>k8_2</ci>
+                        <ci>myo_2</ci>
+                        <ci>RhoA_a_2</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k9_2</ci>
+                        <ci>myo_a_2</ci>
+                        <ci>actin_a_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>myo_actin_2</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>k9_2</ci>
+                        <ci>myo_a_2</ci>
+                        <ci>actin_a_2</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k9r_2</ci>
+                        <ci>myo_actin_2</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <!--ode(E_trans_actin, t) = k6*E_trans*actin_a-k6r*E_trans_actin;-->
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>E_trans_actin_1</ci>
+                </apply>
+                <cn cellml:units="dimensionless">0</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>E_trans_all_1</ci>
+                <apply>
+                    <plus/>
+                    <ci>E_trans</ci>
+                    <ci>E_trans_actin_1</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>E_trans_actin_2</ci>
+                </apply>
+                <cn cellml:units="dimensionless">0</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>E_trans_all_2</ci>
+                <apply>
+                    <plus/>
+                    <ci>E_trans</ci>
+                    <ci>E_trans_actin_2</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <connection>
+        <map_components component_1="environment" component_2="membrane"/>
+        <map_variables variable_1="t" variable_2="t"/>
+    </connection>
+</model>

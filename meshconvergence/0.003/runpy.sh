@@ -1,0 +1,1 @@
+python ./circle_4.0_1_NormalFormation.py -flags > runLog.txt 2>&1 &
